@@ -1,0 +1,40 @@
+import { prisma } from '../config/database.js';
+
+export class turmaDAO {
+
+  listarTodas = async () => {
+    const turmas = await prisma.turma.findMany({
+      include: { estudantes: true }
+    });
+
+    return turmas;
+  };
+
+  criar = async (dados: { nome: string; horario: string; idioma: string }) => {
+    const novaTurma = await prisma.turma.create({
+      data: dados
+    });
+
+    return novaTurma;
+  };
+
+  atualizar = async (
+    codigo: number,
+    dados: { nome?: string; horario?: string; idioma?: string }
+  ) => {
+    const turmaAtualizada = await prisma.turma.update({
+      where: { codigo },
+      data: dados
+    });
+
+    return turmaAtualizada;
+  };
+
+  remover = async (codigo: number) => {
+    await prisma.turma.delete({
+      where: { codigo }
+    });
+
+    return true;
+  };
+}
