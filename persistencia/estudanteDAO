@@ -1,0 +1,40 @@
+import { prisma } from '../config/database.js';
+
+export class estudanteDAO {
+
+  listarTodos = async () => {
+    const estudantes = await prisma.estudante.findMany({
+      include: { turma: true }
+    });
+
+    return estudantes;
+  };
+
+  criar = async (dados: { nome: string; turmaCodigo: number }) => {
+    const estudante = await prisma.estudante.create({
+      data: dados
+    });
+
+    return estudante;
+  };
+
+  atualizar = async (
+    codigo: number,
+    dados: { nome?: string; turmaCodigo?: number }
+  ) => {
+    const estudanteAtualizado = await prisma.estudante.update({
+      where: { codigo },
+      data: dados
+    });
+
+    return estudanteAtualizado;
+  };
+
+  remover = async (codigo: number) => {
+    await prisma.estudante.delete({
+      where: { codigo }
+    });
+
+    return true;
+  };
+}
